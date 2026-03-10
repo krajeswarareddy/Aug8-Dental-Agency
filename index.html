@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aug8 Agency — Dental Automation System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue-900: #0a1628;
+      --blue-800: #0d2040;
+      --blue-700: #0f3460;
+      --blue-600: #1a4a8a;
+      --blue-500: #1e5fbb;
+      --blue-400: #2d7dd2;
+      --blue-300: #5aa3e8;
+      --blue-100: #deeeff;
+      --blue-50:  #f0f7ff;
+      --accent:   #00c2ff;
+      --accent2:  #0ff0b3;
+      --white:    #ffffff;
+      --gray-100: #f4f7fb;
+      --gray-200: #e8eef6;
+      --gray-500: #6b7a99;
+      --gray-700: #374151;
+      --text:     #0d1b2e;
+      --font-head: 'Sora', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--text);
+      background: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ─── UTILS ─────────────────────────────────── */
+    .container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+    .btn-primary {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--blue-500), var(--accent));
+      color: #fff;
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 14px 32px;
+      border-radius: 50px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 4px 20px rgba(30,95,187,.35);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(30,95,187,.5); }
+    .btn-outline {
+      display: inline-block;
+      border: 2px solid var(--blue-500);
+      color: var(--blue-500);
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 12px 30px;
+      border-radius: 50px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all .2s;
+      background: transparent;
+    }
+    .btn-outline:hover { background: var(--blue-500); color: #fff; }
+    .section-tag {
+      display: inline-block;
+      background: var(--blue-100);
+      color: var(--blue-600);
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 50px;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: var(--font-head);
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 800;
+      color: var(--blue-900);
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--gray-500);
+      line-height: 1.7;
+      max-width: 600px;
+    }
+    .page { display: none; animation: fadeIn .4s ease; }
+    .page.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ─── NAV ───────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(255,255,255,.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 24px;
+      height: 70px;
+      display: flex; align-items: center;
+    }
+    .nav-inner { max-width: 1180px; margin: 0 auto; width: 100%; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo {
+      font-family: var(--font-head); font-weight: 800; font-size: 1.4rem;
+      color: var(--blue-700); text-decoration: none; letter-spacing: -.02em;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 4px; list-style: none; }
+    .nav-links a, .nav-links .dropdown-toggle {
+      font-family: var(--font-head); font-weight: 600; font-size: .88rem;
+      color: var(--gray-700); text-decoration: none;
+      padding: 8px 14px; border-radius: 8px;
+      transition: background .15s, color .15s;
+      cursor: pointer; border: none; background: none;
+    }
+    .nav-links a:hover, .nav-links .dropdown-toggle:hover { background: var(--blue-50); color: var(--blue-600); }
+    .nav-links a.active-nav { color: var(--blue-600); background: var(--blue-50); }
+    .dropdown { position: relative; }
+    .dropdown-menu {
+      display: none; position: absolute; top: calc(100% + 6px); left: 0;
+      background: #fff; border: 1px solid var(--gray-200); border-radius: 14px;
+      min-width: 220px; padding: 8px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.12);
+    }
+    .dropdown:hover .dropdown-menu { display: block; }
+    .dropdown-menu a {
+      display: block; padding: 10px 14px; border-radius: 8px;
+      font-size: .86rem; color: var(--gray-700); text-decoration: none;
+      font-family: var(--font-head); font-weight: 500;
+    }
+    .dropdown-menu a:hover { background: var(--blue-50); color: var(--blue-600); }
+    .nav-cta { margin-left: 12px; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+    .hamburger span { width: 24px; height: 2px; background: var(--blue-700); border-radius: 2px; transition: all .3s; }
+    .mobile-menu { display: none; position: fixed; top: 70px; left: 0; right: 0; background: #fff; border-bottom: 1px solid var(--gray-200); padding: 20px 24px; z-index: 999; }
+    .mobile-menu.open { display: block; }
+    .mobile-menu a { display: block; padding: 12px 0; font-family: var(--font-head); font-weight: 600; font-size: .95rem; color: var(--gray-700); text-decoration: none; border-bottom: 1px solid var(--gray-100); }
+    .mobile-menu a:last-child { border-bottom: none; }
+
+    @media (max-width: 900px) {
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+    }
+
+    /* ─── HERO ──────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--blue-900) 0%, var(--blue-700) 60%, #0d3b7a 100%);
+      display: flex; align-items: center;
+      position: relative; overflow: hidden;
+      padding-top: 70px;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(0,194,255,.15) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(15,240,179,.1) 0%, transparent 50%);
+    }
+    .hero-grid {
+      position: absolute; inset: 0; opacity: .06;
+      background-image: linear-gradient(var(--blue-400) 1px, transparent 1px),
+                        linear-gradient(90deg, var(--blue-400) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .hero-content { position: relative; z-index: 2; padding: 80px 0; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+      border-radius: 50px; padding: 8px 18px;
+      font-family: var(--font-head); font-size: .8rem; font-weight: 600;
+      color: var(--accent); letter-spacing: .08em; text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .hero-badge::before { content: '⚡'; font-size: .9rem; }
+    .hero h1 {
+      font-family: var(--font-head); font-weight: 800;
+      font-size: clamp(2.6rem, 6vw, 4.2rem);
+      color: #fff; line-height: 1.1; margin-bottom: 24px;
+    }
+    .hero h1 .highlight {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 1.15rem; color: rgba(255,255,255,.75); line-height: 1.75;
+      max-width: 580px; margin-bottom: 40px;
+    }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn-hero-white {
+      display: inline-block; background: #fff; color: var(--blue-700);
+      font-family: var(--font-head); font-weight: 700; font-size: .95rem;
+      padding: 14px 32px; border-radius: 50px; text-decoration: none;
+      transition: all .2s; box-shadow: 0 4px 20px rgba(0,0,0,.2);
+    }
+    .btn-hero-white:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,.3); }
+    .btn-hero-outline {
+      display: inline-block; border: 2px solid rgba(255,255,255,.5);
+      color: #fff; font-family: var(--font-head); font-weight: 700; font-size: .95rem;
+      padding: 12px 30px; border-radius: 50px; text-decoration: none;
+      transition: all .2s;
+    }
+    .btn-hero-outline:hover { background: rgba(255,255,255,.1); border-color: #fff; }
+    .hero-stats {
+      display: flex; gap: 40px; margin-top: 64px; flex-wrap: wrap;
+    }
+    .stat { border-left: 3px solid var(--accent); padding-left: 18px; }
+    .stat-num { font-family: var(--font-head); font-size: 2rem; font-weight: 800; color: #fff; }
+    .stat-label { font-size: .85rem; color: rgba(255,255,255,.6); margin-top: 2px; }
+    .hero-visual {
+      position: absolute; right: -40px; top: 50%; transform: translateY(-50%);
+      width: 500px; opacity: .12; pointer-events: none;
+    }
+
+    /* ─── ALERT BANNER ──────────────────────────── */
+    .alert-banner {
+      background: linear-gradient(135deg, var(--blue-900), var(--blue-700));
+      padding: 60px 0;
+    }
+    .alert-inner {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+    }
+    .alert-left h2 {
+      font-family: var(--font-head); font-weight: 800;
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem); color: #fff; line-height: 1.2; margin-bottom: 16px;
+    }
+    .alert-left h2 span { color: var(--accent); }
+    .alert-left p { color: rgba(255,255,255,.7); font-size: 1.05rem; line-height: 1.7; }
+    .alert-card {
+      background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.15);
+      border-radius: 20px; padding: 32px;
+    }
+    .alert-timer {
+      font-family: var(--font-head); font-size: 4rem; font-weight: 800;
+      color: var(--accent); line-height: 1; margin-bottom: 8px;
+    }
+    .alert-timer span { font-size: 1.5rem; color: rgba(255,255,255,.5); }
+    .alert-desc { color: rgba(255,255,255,.8); font-size: 1rem; line-height: 1.6; margin-bottom: 20px; }
+    .alert-steps { list-style: none; }
+    .alert-steps li {
+      display: flex; align-items: flex-start; gap: 12px;
+      color: rgba(255,255,255,.75); font-size: .92rem; margin-bottom: 12px;
+    }
+    .alert-steps li .step-icon {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue-500), var(--accent));
+      display: flex; align-items: center; justify-content: center;
+      font-size: .7rem; font-weight: 800; color: #fff; flex-shrink: 0; margin-top: 1px;
+    }
+    @media (max-width: 768px) { .alert-inner { grid-template-columns: 1fr; } }
+
+    /* ─── PRACTICES WE HELP ─────────────────────── */
+    .practices { padding: 100px 0; background: var(--gray-100); }
+    .section-header { text-align: center; margin-bottom: 60px; }
+    .section-header .section-sub { margin: 0 auto; }
+    .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+    .card {
+      background: #fff; border-radius: 20px; padding: 36px 32px;
+      border: 1px solid var(--gray-200);
+      transition: transform .25s, box-shadow .25s;
+      position: relative; overflow: hidden;
+    }
+    .card::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--blue-500), var(--accent));
+      border-radius: 20px 20px 0 0;
+    }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 24px 60px rgba(10,22,40,.12); }
+    .card-icon {
+      width: 56px; height: 56px; border-radius: 14px;
+      background: var(--blue-50); display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; margin-bottom: 20px;
+    }
+    .card h3 { font-family: var(--font-head); font-weight: 700; font-size: 1.2rem; color: var(--blue-900); margin-bottom: 12px; }
+    .card p { font-size: .94rem; color: var(--gray-500); line-height: 1.7; margin-bottom: 20px; }
+    .card-link {
+      font-family: var(--font-head); font-weight: 700; font-size: .87rem;
+      color: var(--blue-500); text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .card-link:hover { color: var(--blue-700); }
+    @media (max-width: 768px) { .cards-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 1024px) and (min-width: 769px) { .cards-grid { grid-template-columns: 1fr 1fr; } }
+
+    /* ─── SERVICES ──────────────────────────────── */
+    .services { padding: 100px 0; }
+    .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; margin-top: 60px; }
+    .service-card {
+      border-radius: 20px; overflow: hidden;
+      border: 1px solid var(--gray-200);
+      display: flex; flex-direction: column;
+      transition: box-shadow .25s, transform .25s;
+    }
+    .service-card:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(10,22,40,.1); }
+    .service-card-top {
+      background: linear-gradient(135deg, var(--blue-900), var(--blue-700));
+      padding: 32px; display: flex; align-items: center; gap: 18px;
+    }
+    .service-icon-big {
+      width: 64px; height: 64px; border-radius: 16px;
+      background: rgba(255,255,255,.12); display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; flex-shrink: 0;
+    }
+    .service-card-top h3 { font-family: var(--font-head); font-weight: 800; font-size: 1.25rem; color: #fff; }
+    .service-card-top p { font-size: .88rem; color: rgba(255,255,255,.65); margin-top: 4px; }
+    .service-card-body { padding: 28px 32px; background: #fff; flex: 1; }
+    .service-features { list-style: none; }
+    .service-features li {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: .92rem; color: var(--gray-700); margin-bottom: 10px;
+    }
+    .check { color: var(--blue-500); font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+    .service-card-footer { padding: 20px 32px 28px; background: #fff; }
+    .service-card-footer a { font-family: var(--font-head); font-weight: 700; font-size: .9rem; color: var(--blue-500); text-decoration: none; }
+    @media (max-width: 768px) { .services-grid { grid-template-columns: 1fr; } }
+
+    /* ─── PROCESS ───────────────────────────────── */
+    .process { padding: 100px 0; background: var(--blue-900); }
+    .process .section-title { color: #fff; }
+    .process .section-sub { color: rgba(255,255,255,.6); }
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 60px; }
+    .step-card {
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 20px; padding: 32px 24px; position: relative;
+      transition: background .25s;
+    }
+    .step-card:hover { background: rgba(255,255,255,.09); }
+    .step-num {
+      font-family: var(--font-head); font-size: .75rem; font-weight: 800;
+      color: var(--accent); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 20px;
+    }
+    .step-icon-wrap {
+      width: 52px; height: 52px; border-radius: 14px;
+      background: linear-gradient(135deg, var(--blue-600), var(--blue-500));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; margin-bottom: 20px;
+    }
+    .step-card h4 { font-family: var(--font-head); font-weight: 700; font-size: 1.05rem; color: #fff; margin-bottom: 10px; }
+    .step-card p { font-size: .88rem; color: rgba(255,255,255,.6); line-height: 1.6; }
+    .step-connector {
+      position: absolute; right: -12px; top: 50%;
+      transform: translateY(-50%); color: rgba(255,255,255,.2);
+      font-size: 1.4rem; z-index: 1;
+    }
+    @media (max-width: 900px) { .steps { grid-template-columns: repeat(2, 1fr); } .step-connector { display: none; } }
+    @media (max-width: 500px) { .steps { grid-template-columns: 1fr; } }
+
+    /* ─── CTA SECTION ───────────────────────────── */
+    .cta-section {
+      padding: 100px 0;
+      background: linear-gradient(135deg, var(--blue-50) 0%, #fff 100%);
+    }
+    .cta-box {
+      background: linear-gradient(135deg, var(--blue-900), var(--blue-700));
+      border-radius: 28px; padding: 70px 60px;
+      display: flex; align-items: center; justify-content: space-between; gap: 40px;
+      position: relative; overflow: hidden;
+    }
+    .cta-box::before {
+      content: ''; position: absolute; right: -80px; top: -80px;
+      width: 300px; height: 300px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,194,255,.2), transparent);
+    }
+    .cta-box h2 { font-family: var(--font-head); font-weight: 800; font-size: clamp(1.7rem, 3vw, 2.4rem); color: #fff; }
+    .cta-box p { color: rgba(255,255,255,.7); font-size: 1rem; margin-top: 10px; }
+    .cta-box-right { flex-shrink: 0; }
+    @media (max-width: 768px) { .cta-box { flex-direction: column; padding: 40px 32px; text-align: center; } }
+
+    /* ─── TESTIMONIALS ──────────────────────────── */
+    .testimonials { padding: 100px 0; background: var(--gray-100); }
+    .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 60px; }
+    .testi-card {
+      background: #fff; border-radius: 20px; padding: 32px;
+      border: 1px solid var(--gray-200);
+    }
+    .stars { color: #f5a623; font-size: 1.1rem; margin-bottom: 16px; letter-spacing: 2px; }
+    .testi-text { font-size: .95rem; color: var(--gray-700); line-height: 1.7; margin-bottom: 24px; font-style: italic; }
+    .testi-author { display: flex; align-items: center; gap: 12px; }
+    .testi-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue-600), var(--accent));
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-head); font-weight: 800; color: #fff; font-size: .9rem;
+    }
+    .testi-name { font-family: var(--font-head); font-weight: 700; font-size: .9rem; color: var(--blue-900); }
+    .testi-role { font-size: .8rem; color: var(--gray-500); }
+    @media (max-width: 900px) { .testi-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 1100px) and (min-width: 901px) { .testi-grid { grid-template-columns: 1fr 1fr; } }
+
+    /* ─── WHO WE HELP PAGE ──────────────────────── */
+    .page-hero {
+      background: linear-gradient(135deg, var(--blue-900), var(--blue-700));
+      padding: 140px 0 80px; text-align: center;
+    }
+    .page-hero h1 { font-family: var(--font-head); font-weight: 800; font-size: clamp(2rem, 5vw, 3.2rem); color: #fff; margin-bottom: 16px; }
+    .page-hero p { font-size: 1.1rem; color: rgba(255,255,255,.7); max-width: 600px; margin: 0 auto; line-height: 1.7; }
+    .who-tabs { display: flex; justify-content: center; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
+    .tab-btn {
+      font-family: var(--font-head); font-weight: 700; font-size: .88rem;
+      padding: 10px 24px; border-radius: 50px; cursor: pointer;
+      border: 2px solid rgba(255,255,255,.3); color: rgba(255,255,255,.7);
+      background: transparent; transition: all .2s;
+    }
+    .tab-btn.active, .tab-btn:hover { background: #fff; color: var(--blue-700); border-color: #fff; }
+    .who-content { padding: 80px 0; }
+    .who-section { display: none; }
+    .who-section.active { display: block; }
+    .who-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .who-text .section-title { font-size: clamp(1.8rem, 3vw, 2.4rem); }
+    .who-text p { font-size: 1rem; color: var(--gray-500); line-height: 1.75; margin-bottom: 24px; }
+    .who-list { list-style: none; margin-bottom: 32px; }
+    .who-list li { display: flex; align-items: flex-start; gap: 12px; font-size: .95rem; color: var(--gray-700); margin-bottom: 14px; }
+    .who-list li::before { content: '✓'; color: var(--blue-500); font-weight: 800; flex-shrink: 0; margin-top: 1px; }
+    .who-visual {
+      background: linear-gradient(135deg, var(--blue-900), var(--blue-700));
+      border-radius: 24px; padding: 40px; min-height: 380px;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      text-align: center; position: relative; overflow: hidden;
+    }
+    .who-visual-icon { font-size: 5rem; margin-bottom: 20px; }
+    .who-visual h3 { font-family: var(--font-head); font-weight: 800; font-size: 1.4rem; color: #fff; margin-bottom: 10px; }
+    .who-visual p { color: rgba(255,255,255,.6); font-size: .95rem; line-height: 1.6; }
+    @media (max-width: 768px) { .who-grid { grid-template-columns: 1fr; } }
+
+    /* ─── SERVICES PAGE ─────────────────────────── */
+    .services-page { padding: 80px 0; }
+    .service-detail {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+      padding: 60px 0; border-bottom: 1px solid var(--gray-200);
+    }
+    .service-detail:last-child { border-bottom: none; }
+    .service-detail.reverse { }
+    .service-detail .text-side h2 { font-family: var(--font-head); font-weight: 800; font-size: clamp(1.7rem, 3vw, 2.2rem); color: var(--blue-900); margin-bottom: 16px; }
+    .service-detail .text-side p { font-size: .98rem; color: var(--gray-500); line-height: 1.75; margin-bottom: 20px; }
+    .feature-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+    .feature-tag { background: var(--blue-50); color: var(--blue-700); font-family: var(--font-head); font-weight: 600; font-size: .8rem; padding: 6px 14px; border-radius: 50px; }
+    .service-visual-box {
+      background: linear-gradient(135deg, var(--blue-900), var(--blue-700));
+      border-radius: 24px; padding: 40px; min-height: 320px;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .service-visual-box h4 { font-family: var(--font-head); font-weight: 800; font-size: 1.1rem; color: #fff; margin-bottom: 20px; }
+    .metric-row { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,.08); border-radius: 10px; padding: 12px 16px; margin-bottom: 10px; }
+    .metric-label { font-size: .85rem; color: rgba(255,255,255,.7); }
+    .metric-val { font-family: var(--font-head); font-weight: 800; color: var(--accent); font-size: 1rem; }
+    @media (max-width: 768px) { .service-detail { grid-template-columns: 1fr; } }
+
+    /* ─── PRICING PAGE ──────────────────────────── */
+    .pricing-page { padding: 80px 0; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 50px; }
+    .pricing-card {
+      border-radius: 20px; overflow: hidden; border: 1px solid var(--gray-200);
+      transition: transform .25s, box-shadow .25s;
+      display: flex; flex-direction: column;
+    }
+    .pricing-card:hover { transform: translateY(-8px); box-shadow: 0 24px 60px rgba(10,22,40,.15); }
+    .pricing-card.popular { border-color: var(--blue-500); border-width: 2px; }
+    .pricing-head {
+      background: var(--gray-100); padding: 28px 24px;
+      text-align: center; position: relative;
+    }
+    .pricing-card.popular .pricing-head { background: linear-gradient(135deg, var(--blue-900), var(--blue-700)); }
+    .popular-badge {
+      position: absolute; top: -1px; right: 20px;
+      background: var(--accent); color: var(--blue-900);
+      font-family: var(--font-head); font-weight: 800; font-size: .7rem;
+      padding: 4px 12px; border-radius: 0 0 10px 10px; letter-spacing: .08em; text-transform: uppercase;
+    }
+    .pricing-icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .pricing-head h3 { font-family: var(--font-head); font-weight: 800; font-size: 1.1rem; color: var(--blue-900); }
+    .pricing-card.popular .pricing-head h3 { color: #fff; }
+    .pricing-head p { font-size: .82rem; color: var(--gray-500); margin-top: 4px; }
+    .pricing-card.popular .pricing-head p { color: rgba(255,255,255,.65); }
+    .pricing-body { padding: 24px; background: #fff; flex: 1; }
+    .pricing-features { list-style: none; }
+    .pricing-features li { display: flex; align-items: flex-start; gap: 10px; font-size: .88rem; color: var(--gray-700); margin-bottom: 10px; }
+    .pricing-features li .check { color: var(--blue-500); }
+    .pricing-footer { padding: 20px 24px 28px; background: #fff; text-align: center; }
+    @media (max-width: 1000px) { .pricing-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .pricing-grid { grid-template-columns: 1fr; } }
+
+    /* ─── ABOUT PAGE ────────────────────────────── */
+    .about-page { padding: 80px 0; }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; margin-bottom: 80px; }
+    .about-grid p { font-size: .98rem; color: var(--gray-500); line-height: 1.8; margin-bottom: 16px; }
+    .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 60px; }
+    .value-card { background: var(--gray-100); border-radius: 20px; padding: 32px; text-align: center; }
+    .value-icon { font-size: 2.5rem; margin-bottom: 14px; }
+    .value-card h4 { font-family: var(--font-head); font-weight: 700; font-size: 1rem; color: var(--blue-900); margin-bottom: 8px; }
+    .value-card p { font-size: .87rem; color: var(--gray-500); line-height: 1.6; }
+    @media (max-width: 768px) { .about-grid { grid-template-columns: 1fr; } .values-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 1000px) and (min-width: 769px) { .values-grid { grid-template-columns: 1fr 1fr; } }
+
+    /* ─── CONTACT PAGE ──────────────────────────── */
+    .contact-page { padding: 80px 0; }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 60px; align-items: start; }
+    .contact-info h2 { font-family: var(--font-head); font-weight: 800; font-size: 1.8rem; color: var(--blue-900); margin-bottom: 16px; }
+    .contact-info p { font-size: .98rem; color: var(--gray-500); line-height: 1.75; margin-bottom: 32px; }
+    .contact-item { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 24px; }
+    .contact-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--blue-50); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+    .contact-item h5 { font-family: var(--font-head); font-weight: 700; font-size: .9rem; color: var(--blue-900); margin-bottom: 4px; }
+    .contact-item p { font-size: .9rem; color: var(--gray-500); margin: 0; }
+    .contact-form { background: var(--gray-100); border-radius: 24px; padding: 40px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-family: var(--font-head); font-weight: 600; font-size: .85rem; color: var(--blue-900); margin-bottom: 8px; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 12px 16px; border: 1.5px solid var(--gray-200);
+      border-radius: 12px; font-family: var(--font-body); font-size: .95rem;
+      color: var(--text); background: #fff; outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--blue-500); box-shadow: 0 0 0 3px rgba(30,95,187,.12);
+    }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 768px) { .contact-grid { grid-template-columns: 1fr; } .form-row { grid-template-columns: 1fr; } }
+
+    /* ─── FOOTER ────────────────────────────────── */
+    footer {
+      background: var(--blue-900);
+      padding: 70px 0 30px;
+    }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 50px; }
+    .footer-brand .nav-logo { display: inline-block; font-size: 1.5rem; margin-bottom: 16px; color: #fff; }
+    .footer-brand .nav-logo span { color: var(--accent); }
+    .footer-brand p { font-size: .9rem; color: rgba(255,255,255,.55); line-height: 1.7; max-width: 280px; }
+    .footer-social { display: flex; gap: 10px; margin-top: 20px; }
+    .social-btn {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: rgba(255,255,255,.1); display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,.7); font-size: .95rem; text-decoration: none;
+      transition: background .2s, color .2s;
+    }
+    .social-btn:hover { background: var(--blue-500); color: #fff; }
+    .footer-col h4 { font-family: var(--font-head); font-weight: 700; font-size: .9rem; color: #fff; margin-bottom: 16px; letter-spacing: .05em; text-transform: uppercase; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 10px; }
+    .footer-col ul li a { font-size: .88rem; color: rgba(255,255,255,.55); text-decoration: none; transition: color .2s; }
+    .footer-col ul li a:hover { color: var(--accent); }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,.1); padding-top: 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: gap; gap: 12px; }
+    .footer-bottom p { font-size: .83rem; color: rgba(255,255,255,.4); }
+    @media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 500px) { .footer-grid { grid-template-columns: 1fr; } }
+
+    /* ─── LIVE CHAT WIDGET ──────────────────────── */
+    .chat-bubble {
+      position: fixed; bottom: 28px; right: 28px; z-index: 9999;
+    }
+    .chat-toggle {
+      width: 60px; height: 60px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue-600), var(--accent));
+      border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; box-shadow: 0 6px 24px rgba(30,95,187,.5);
+      transition: transform .2s;
+    }
+    .chat-toggle:hover { transform: scale(1.1); }
+    .chat-window {
+      position: absolute; bottom: 72px; right: 0;
+      width: 320px; background: #fff; border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.18);
+      overflow: hidden; display: none;
+      animation: slideUp .3s ease;
+    }
+    .chat-window.open { display: block; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .chat-header {
+      background: linear-gradient(135deg, var(--blue-900), var(--blue-700));
+      padding: 20px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .chat-header-info { display: flex; align-items: center; gap: 12px; }
+    .chat-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--blue-400), var(--accent)); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+    .chat-header-text h4 { font-family: var(--font-head); font-weight: 700; font-size: .9rem; color: #fff; }
+    .chat-header-text p { font-size: .75rem; color: rgba(255,255,255,.7); }
+    .chat-online { display: flex; align-items: center; gap: 4px; }
+    .chat-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent2); }
+    .online-text { font-size: .75rem; color: rgba(255,255,255,.7); }
+    .chat-close { background: none; border: none; color: rgba(255,255,255,.7); cursor: pointer; font-size: 1.1rem; }
+    .chat-body { padding: 20px; height: 260px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+    .chat-msg { max-width: 85%; }
+    .chat-msg.bot { align-self: flex-start; }
+    .chat-msg.user { align-self: flex-end; }
+    .chat-msg .bubble { padding: 10px 14px; border-radius: 14px; font-size: .87rem; line-height: 1.5; }
+    .chat-msg.bot .bubble { background: var(--gray-100); color: var(--text); border-radius: 4px 14px 14px 14px; }
+    .chat-msg.user .bubble { background: var(--blue-500); color: #fff; border-radius: 14px 14px 4px 14px; }
+    .chat-time { font-size: .7rem; color: var(--gray-500); margin-top: 4px; }
+    .chat-foot { padding: 12px 16px; border-top: 1px solid var(--gray-200); display: flex; gap: 8px; align-items: center; }
+    .chat-input { flex: 1; padding: 10px 14px; border: 1.5px solid var(--gray-200); border-radius: 50px; font-size: .87rem; outline: none; font-family: var(--font-body); }
+    .chat-input:focus { border-color: var(--blue-400); }
+    .chat-send { width: 36px; height: 36px; border-radius: 50%; background: var(--blue-500); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #fff; font-size: .9rem; transition: background .2s; }
+    .chat-send:hover { background: var(--blue-600); }
+    .chat-notify { position: absolute; top: -4px; right: -4px; width: 18px; height: 18px; border-radius: 50%; background: #ef4444; display: flex; align-items: center; justify-content: center; font-size: .65rem; color: #fff; font-weight: 800; }
+
+    /* ─── SCROLL TOP ────────────────────────────── */
+    .scroll-top {
+      position: fixed; bottom: 100px; right: 30px; z-index: 1000;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--blue-500); border: none; cursor: pointer;
+      color: #fff; font-size: 1rem;
+      display: none; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(30,95,187,.4);
+      transition: background .2s;
+    }
+    .scroll-top.visible { display: flex; }
+    .scroll-top:hover { background: var(--blue-700); }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══════════════════════════════════════════════ -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="#" onclick="showPage('home')">Aug<span>8</span> Agency</a>
+    <ul class="nav-links">
+      <li><a href="#" onclick="showPage('home')" data-page="home">Home</a></li>
+      <li class="dropdown">
+        <span class="dropdown-toggle">Who We Help ▾</span>
+        <div class="dropdown-menu">
+          <a href="#" onclick="showPage('who');switchTab('startup')">Startup Practice</a>
+          <a href="#" onclick="showPage('who');switchTab('struggling')">Struggling Practice</a>
+          <a href="#" onclick="showPage('who');switchTab('growing')">Growing Practice</a>
+        </div>
+      </li>
+      <li><a href="#" onclick="showPage('services')" data-page="services">Services</a></li>
+      <li><a href="#" onclick="showPage('pricing')" data-page="pricing">Pricing</a></li>
+      <li><a href="#" onclick="showPage('about')" data-page="about">About Us</a></li>
+      <li><a href="#" onclick="showPage('contact')" data-page="contact">Contact</a></li>
+    </ul>
+    <a class="btn-primary nav-cta" href="#" onclick="showPage('contact')">Get Free Strategy Call</a>
+    <div class="hamburger" onclick="toggleMobile()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#" onclick="showPage('home');toggleMobile()">Home</a>
+  <a href="#" onclick="showPage('who');switchTab('startup');toggleMobile()">Startup Practice</a>
+  <a href="#" onclick="showPage('who');switchTab('struggling');toggleMobile()">Struggling Practice</a>
+  <a href="#" onclick="showPage('who');switchTab('growing');toggleMobile()">Growing Practice</a>
+  <a href="#" onclick="showPage('services');toggleMobile()">Services</a>
+  <a href="#" onclick="showPage('pricing');toggleMobile()">Pricing</a>
+  <a href="#" onclick="showPage('about');toggleMobile()">About Us</a>
+  <a href="#" onclick="showPage('contact');toggleMobile()">Contact</a>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE: HOME                                             -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="page-home" class="page active">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">The #1 Dental Automation System in America</div>
+        <h1>
+          Fill Your Chair.<br/>
+          Grow Your Practice.<br/>
+          <span class="highlight">We Handle Everything.</span>
+        </h1>
+        <p>Aug8 Agency is America's most complete dental growth system — from building your website to running Meta ad campaigns and calling your team <strong style="color:#fff">within 5 minutes</strong> of every new patient lead. No cold leads. No delays.</p>
+        <div class="hero-btns">
+          <a class="btn-hero-white" href="#" onclick="showPage('contact')">Get Free Strategy Call</a>
+          <a class="btn-hero-outline" href="#" onclick="showPage('services')">See How It Works</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="stat-num">50+</div>
+            <div class="stat-label">States Covered</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">&lt;5min</div>
+            <div class="stat-label">Lead Alert Response</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">3x</div>
+            <div class="stat-label">Average Patient Growth</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">100%</div>
+            <div class="stat-label">Done-For-You System</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5-Min Alert Banner -->
+  <section class="alert-banner">
+    <div class="container">
+      <div class="alert-inner">
+        <div class="alert-left">
+          <div class="section-tag" style="background:rgba(0,194,255,.15);color:var(--accent)">Our Game-Changer Feature</div>
+          <h2>Never Let a <span>Hot Lead</span><br/>Go Cold Again</h2>
+          <p>Most dental practices lose new patient leads because no one follows up fast enough. We solved that. The moment a patient fills out your lead form, our system instantly triggers a live phone call to your front desk — getting you connected before the patient even checks their phone again.</p>
+        </div>
+        <div class="alert-card">
+          <div class="alert-timer">5 <span>min</span></div>
+          <div class="alert-desc">Maximum time between a lead submitting their form and your phone ringing with a live alert notification.</div>
+          <ul class="alert-steps">
+            <li>
+              <span class="step-icon">1</span>
+              <span>Patient sees your Meta ad and submits their details</span>
+            </li>
+            <li>
+              <span class="step-icon">2</span>
+              <span>Our system instantly detects the new lead submission</span>
+            </li>
+            <li>
+              <span class="step-icon">3</span>
+              <span>Your front desk receives an automated call alert within 5 minutes</span>
+            </li>
+            <li>
+              <span class="step-icon">4</span>
+              <span>You call the patient back while they're still hot — book the appointment</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Practices We Help -->
+  <section class="practices">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Who We Help</div>
+        <h2 class="section-title">Built for Every Stage of Your Practice</h2>
+        <p class="section-sub">Whether you're just opening your doors or trying to dominate your entire market, Aug8 Agency has a system designed for exactly where you are right now.</p>
+      </div>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-icon">🌱</div>
+          <h3>Startup / New Practices</h3>
+          <p>Just opening? We'll set up your entire digital foundation — website, brand, and a lead-gen system that starts filling your schedule from day one.</p>
+          <a class="card-link" href="#" onclick="showPage('who');switchTab('startup')">Learn More →</a>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔍</div>
+          <h3>Struggling Practices</h3>
+          <p>Patient numbers dropping? We diagnose exactly what's broken in your marketing and rebuild it with a system that consistently attracts new patients.</p>
+          <a class="card-link" href="#" onclick="showPage('who');switchTab('struggling')">Learn More →</a>
+        </div>
+        <div class="card">
+          <div class="card-icon">🚀</div>
+          <h3>Growing Practices</h3>
+          <p>Already busy but want to scale? We run aggressive expansion campaigns and dominate your local market so you can grow to multiple locations.</p>
+          <a class="card-link" href="#" onclick="showPage('who');switchTab('growing')">Learn More →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Overview -->
+  <section class="services">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Our Services</div>
+        <h2 class="section-title">Everything Your Practice Needs to Grow</h2>
+        <p class="section-sub">Three powerful pillars that work together to create a non-stop new patient pipeline for your dental practice.</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-card-top">
+            <div class="service-icon-big">🌐</div>
+            <div>
+              <h3>Custom Dental Website</h3>
+              <p>Built to convert visitors into booked appointments</p>
+            </div>
+          </div>
+          <div class="service-card-body">
+            <ul class="service-features">
+              <li><span class="check">✓</span> Mobile-first, fast-loading design</li>
+              <li><span class="check">✓</span> Built-in appointment booking forms</li>
+              <li><span class="check">✓</span> SEO-optimized from the ground up</li>
+              <li><span class="check">✓</span> HIPAA-conscious contact forms</li>
+              <li><span class="check">✓</span> You own your site 100%</li>
+            </ul>
+          </div>
+          <div class="service-card-footer"><a href="#" onclick="showPage('services')">Learn more →</a></div>
+        </div>
+        <div class="service-card">
+          <div class="service-card-top">
+            <div class="service-icon-big">📣</div>
+            <div>
+              <h3>Meta Ad Campaigns</h3>
+              <p>Facebook & Instagram ads that book appointments</p>
+            </div>
+          </div>
+          <div class="service-card-body">
+            <ul class="service-features">
+              <li><span class="check">✓</span> Hyper-local targeting by zip code</li>
+              <li><span class="check">✓</span> Appointment-focused ad creatives</li>
+              <li><span class="check">✓</span> Full funnel: awareness → booking</li>
+              <li><span class="check">✓</span> Weekly performance reports</li>
+              <li><span class="check">✓</span> Retargeting to warm audiences</li>
+            </ul>
+          </div>
+          <div class="service-card-footer"><a href="#" onclick="showPage('services')">Learn more →</a></div>
+        </div>
+        <div class="service-card">
+          <div class="service-card-top" style="background:linear-gradient(135deg,#003a7d,#0066cc)">
+            <div class="service-icon-big">⚡</div>
+            <div>
+              <h3>5-Min Lead Alert System</h3>
+              <p>Instant call notification — our signature feature</p>
+            </div>
+          </div>
+          <div class="service-card-body">
+            <ul class="service-features">
+              <li><span class="check">✓</span> Real-time lead detection</li>
+              <li><span class="check">✓</span> Auto-call to your front desk</li>
+              <li><span class="check">✓</span> Under 5 minutes every time</li>
+              <li><span class="check">✓</span> Lead info read out on the call</li>
+              <li><span class="check">✓</span> Zero cold leads, ever</li>
+            </ul>
+          </div>
+          <div class="service-card-footer"><a href="#" onclick="showPage('services')">Learn more →</a></div>
+        </div>
+        <div class="service-card">
+          <div class="service-card-top" style="background:linear-gradient(135deg,#0a3d62,#1a6fa8)">
+            <div class="service-icon-big">⭐</div>
+            <div>
+              <h3>Reputation Management</h3>
+              <p>Build 5-star reviews across Google, Yelp & Facebook</p>
+            </div>
+          </div>
+          <div class="service-card-body">
+            <ul class="service-features">
+              <li><span class="check">✓</span> Automated review request system</li>
+              <li><span class="check">✓</span> Google, Yelp & Facebook monitoring</li>
+              <li><span class="check">✓</span> Negative review management</li>
+              <li><span class="check">✓</span> Review showcase on your site</li>
+              <li><span class="check">✓</span> Monthly reputation reports</li>
+            </ul>
+          </div>
+          <div class="service-card-footer"><a href="#" onclick="showPage('services')">Learn more →</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="process">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag" style="background:rgba(0,194,255,.15);color:var(--accent)">Our Process</div>
+        <h2 class="section-title">From Sign-Up to Fully Running in Days</h2>
+        <p class="section-sub" style="color:rgba(255,255,255,.6)">A simple, proven onboarding process so your practice starts getting new patient leads as fast as possible.</p>
+      </div>
+      <div class="steps">
+        <div class="step-card">
+          <div class="step-num">Step 01</div>
+          <div class="step-icon-wrap">📋</div>
+          <h4>Strategy Call</h4>
+          <p>We learn about your practice, your goals, and your local market to build a custom roadmap.</p>
+          <span class="step-connector">›</span>
+        </div>
+        <div class="step-card">
+          <div class="step-num">Step 02</div>
+          <div class="step-icon-wrap">🌐</div>
+          <h4>Website Build</h4>
+          <p>If you don't have a site, we build one. If you do, we optimize it for maximum lead conversion.</p>
+          <span class="step-connector">›</span>
+        </div>
+        <div class="step-card">
+          <div class="step-num">Step 03</div>
+          <div class="step-icon-wrap">📣</div>
+          <h4>Launch Ads</h4>
+          <p>We launch targeted Meta campaigns in your area to start driving appointment requests immediately.</p>
+          <span class="step-connector">›</span>
+        </div>
+        <div class="step-card">
+          <div class="step-num">Step 04</div>
+          <div class="step-icon-wrap">⚡</div>
+          <h4>Live Lead Alerts</h4>
+          <p>Every new lead triggers an instant call to your front desk within 5 minutes — guaranteed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Client Results</div>
+        <h2 class="section-title">Real Dentists. Real Growth.</h2>
+        <p class="section-sub">Don't just take our word for it — here's what dental practices across America are saying about Aug8 Agency.</p>
+      </div>
+      <div class="testi-grid">
+        <div class="testi-card">
+          <div class="stars">★★★★★</div>
+          <p class="testi-text">"Aug8 Agency built our website from scratch and launched ads within a week. We doubled our new patient bookings in just 60 days. The 5-minute lead alert is something I didn't know I needed — now I can't imagine running without it."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">JM</div>
+            <div>
+              <div class="testi-name">Dr. James Mitchell, DDS</div>
+              <div class="testi-role">Mitchell Family Dental — Phoenix, AZ</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="stars">★★★★★</div>
+          <p class="testi-text">"We were struggling with empty chairs for months. Aug8 came in, rebuilt our online presence, and within 45 days we had more leads than we could handle. The instant call alerts mean my staff never misses a single lead."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">SR</div>
+            <div>
+              <div class="testi-name">Dr. Sarah Reynolds, DMD</div>
+              <div class="testi-role">Bright Smile Dental — Dallas, TX</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="stars">★★★★★</div>
+          <p class="testi-text">"I was skeptical at first but the results speak for themselves. Revenue is up 65% from last year. Their team is responsive, professional, and they truly understand the dental industry. Best investment I've made for my practice."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">KP</div>
+            <div>
+              <div class="testi-name">Dr. Kevin Park, DDS</div>
+              <div class="testi-role">Park Dental Group — Chicago, IL</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-box">
+        <div>
+          <h2>Ready to Fill Your Schedule with New Patients?</h2>
+          <p>Get a free, no-obligation dental marketing strategy built specifically for your practice and your local market.</p>
+        </div>
+        <div class="cta-box-right">
+          <a class="btn-hero-white" href="#" onclick="showPage('contact')">Get My Free Strategy →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- end page-home -->
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE: WHO WE HELP                                      -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="page-who" class="page">
+  <section class="page-hero">
+    <div class="container">
+      <div class="section-tag" style="background:rgba(255,255,255,.15);color:rgba(255,255,255,.9)">Who We Help</div>
+      <h1>Find Your Practice's Path to Growth</h1>
+      <p>We've built specialized marketing systems for every stage of a dental practice's journey — from day one to full domination of your local market.</p>
+      <div class="who-tabs">
+        <button class="tab-btn active" onclick="switchTab('startup')">🌱 Startup Practice</button>
+        <button class="tab-btn" onclick="switchTab('struggling')">🔍 Struggling Practice</button>
+        <button class="tab-btn" onclick="switchTab('growing')">🚀 Growing Practice</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="who-content">
+    <div class="container">
+
+      <!-- STARTUP -->
+      <div class="who-section active" id="tab-startup">
+        <div class="who-grid">
+          <div class="who-text">
+            <div class="section-tag">New & Startup Practices</div>
+            <h2 class="section-title">Start Strong. Build a Full Schedule from Day One.</h2>
+            <p>Opening a new dental practice is one of the most exciting — and risky — moments of your career. The difference between a practice that thrives and one that struggles for years comes down to one thing: how fast you build your patient pipeline.</p>
+            <p>Aug8 Agency has helped dozens of startup practices across America go from zero to fully booked in a matter of months. We build your entire marketing foundation and turn on a lead-generation machine that works while you focus on dentistry.</p>
+            <ul class="who-list">
+              <li>Custom dental website built for you</li>
+              <li>Brand identity and digital presence setup</li>
+              <li>Meta ads launched targeting your local area</li>
+              <li>5-minute lead alert system activated from day one</li>
+              <li>Google Business Profile optimization</li>
+              <li>Review generation system to build instant credibility</li>
+            </ul>
+            <a class="btn-primary" href="#" onclick="showPage('contact')">Start Your Practice Right</a>
+          </div>
+          <div class="who-visual">
+            <div class="who-visual-icon">🌱</div>
+            <h3>0 → Fully Booked</h3>
+            <p>Average time for a new practice using Aug8 Agency to achieve a full patient schedule from launch day.</p>
+            <div style="margin-top:24px;background:rgba(255,255,255,.1);border-radius:14px;padding:20px;text-align:left">
+              <div style="font-family:var(--font-head);font-weight:800;font-size:2.5rem;color:var(--accent)">90</div>
+              <div style="color:rgba(255,255,255,.7);font-size:.9rem">Days to full schedule on average</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STRUGGLING -->
+      <div class="who-section" id="tab-struggling">
+        <div class="who-grid">
+          <div class="who-text">
+            <div class="section-tag">Struggling Practices</div>
+            <h2 class="section-title">Empty Chairs? We Know Exactly How to Fix That.</h2>
+            <p>If your patient numbers are flat or falling, it's not because dentistry doesn't have demand — it's because your marketing isn't working. Patients ARE searching for a dentist in your area right now. They're just finding your competitors.</p>
+            <p>We start with a full audit of your digital presence, identify every gap and missed opportunity, then rebuild a system that consistently puts new patients in your chairs — with the 5-minute lead alert making sure none of them slip through the cracks.</p>
+            <ul class="who-list">
+              <li>Full digital marketing audit of your current setup</li>
+              <li>Identify why leads aren't converting</li>
+              <li>Rebuild or redesign your website for conversion</li>
+              <li>Launch targeted Meta campaigns for your area</li>
+              <li>Activate instant lead notification system</li>
+              <li>Reputation repair and review building strategy</li>
+            </ul>
+            <a class="btn-primary" href="#" onclick="showPage('contact')">Fix My Marketing Now</a>
+          </div>
+          <div class="who-visual">
+            <div class="who-visual-icon">📈</div>
+            <h3>Struggling → Thriving</h3>
+            <p>Our turnaround system has revived practices across America with measurable results.</p>
+            <div style="margin-top:24px;background:rgba(255,255,255,.1);border-radius:14px;padding:20px;text-align:left">
+              <div style="font-family:var(--font-head);font-weight:800;font-size:2.5rem;color:var(--accent)">+65%</div>
+              <div style="color:rgba(255,255,255,.7);font-size:.9rem">Average revenue increase within 6 months</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GROWING -->
+      <div class="who-section" id="tab-growing">
+        <div class="who-grid">
+          <div class="who-text">
+            <div class="section-tag">Growing Practices</div>
+            <h2 class="section-title">You're Already Winning. Let's Dominate Your Market.</h2>
+            <p>You've built something great — now it's time to pour fuel on the fire. Growing practices need aggressive, data-driven marketing strategies that help them "show up everywhere" and make it impossible for local patients to choose anyone else.</p>
+            <p>We run multi-channel campaigns, expand your reach across your city and surrounding areas, and layer in advanced retargeting so that every potential patient who sees your brand gets brought back and converted.</p>
+            <ul class="who-list">
+              <li>Multi-location expansion campaigns</li>
+              <li>Advanced Meta retargeting & lookalike audiences</li>
+              <li>Full-funnel marketing from awareness to booking</li>
+              <li>Competitor conquest ad strategies</li>
+              <li>High-volume lead alert system for busy front desks</li>
+              <li>Monthly strategy reviews and scaling decisions</li>
+            </ul>
+            <a class="btn-primary" href="#" onclick="showPage('contact')">Scale My Practice</a>
+          </div>
+          <div class="who-visual">
+            <div class="who-visual-icon">🚀</div>
+            <h3>Local Leader → Market Dominator</h3>
+            <p>Advanced strategies for practices ready to own their entire local market and beyond.</p>
+            <div style="margin-top:24px;background:rgba(255,255,255,.1);border-radius:14px;padding:20px;text-align:left">
+              <div style="font-family:var(--font-head);font-weight:800;font-size:2.5rem;color:var(--accent)">3x</div>
+              <div style="color:rgba(255,255,255,.7);font-size:.9rem">Average patient volume increase for scaling practices</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" style="padding-top:0">
+    <div class="container">
+      <div class="cta-box">
+        <div>
+          <h2>Not Sure Which Plan Fits You?</h2>
+          <p>Book a free 20-minute strategy call and we'll tell you exactly what your practice needs.</p>
+        </div>
+        <div class="cta-box-right">
+          <a class="btn-hero-white" href="#" onclick="showPage('contact')">Book Free Call →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page-who -->
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE: SERVICES                                         -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="page-services" class="page">
+  <section class="page-hero">
+    <div class="container">
+      <div class="section-tag" style="background:rgba(255,255,255,.15);color:rgba(255,255,255,.9)">Our Services</div>
+      <h1>The Complete Dental Growth System</h1>
+      <p>Three core services built to work together as one seamless system that never stops generating new patients for your practice.</p>
+    </div>
+  </section>
+
+  <section class="services-page">
+    <div class="container">
+
+      <!-- Service 1: Website -->
+      <div class="service-detail">
+        <div class="text-side">
+          <div class="section-tag">Service 01</div>
+          <h2>🌐 Custom Dental Website Design</h2>
+          <p>Your website is your #1 sales tool — and most dental websites are failing their practices. We build conversion-focused dental websites that don't just look beautiful but actively turn visitors into booked appointments.</p>
+          <p>Every site we build is mobile-optimized, lightning-fast, SEO-ready, and includes integrated lead capture forms that feed directly into your 5-minute alert system.</p>
+          <div class="feature-tags">
+            <span class="feature-tag">Mobile-First Design</span>
+            <span class="feature-tag">Lead Capture Forms</span>
+            <span class="feature-tag">SEO Foundation</span>
+            <span class="feature-tag">Fast Loading</span>
+            <span class="feature-tag">You Own It 100%</span>
+            <span class="feature-tag">HIPAA Conscious</span>
+          </div>
+          <div style="margin-top:28px">
+            <a class="btn-primary" href="#" onclick="showPage('contact')">Get Your Website Built</a>
+          </div>
+        </div>
+        <div class="service-visual-box">
+          <h4>What We Build Into Every Site</h4>
+          <div class="metric-row"><span class="metric-label">Online Appointment Booking</span><span class="metric-val">✓</span></div>
+          <div class="metric-row"><span class="metric-label">Service Pages (All Specialties)</span><span class="metric-val">✓</span></div>
+          <div class="metric-row"><span class="metric-label">Before/After Gallery</span><span class="metric-val">✓</span></div>
+          <div class="metric-row"><span class="metric-label">Patient Reviews Section</span><span class="metric-val">✓</span></div>
+          <div class="metric-row"><span class="metric-label">Insurance Info Page</span><span class="metric-val">✓</span></div>
+          <div class="metric-row"><span class="metric-label">Live Chat Integration</span><span class="metric-val">✓</span></div>
+          <div class="metric-row"><span class="metric-label">Local SEO Setup</span><span class="metric-val">✓</span></div>
+        </div>
+      </div>
+
+      <!-- Service 2: Meta Ads -->
+      <div class="service-detail">
+        <div class="service-visual-box">
+          <h4>Campaign Performance Averages</h4>
+          <div class="metric-row"><span class="metric-label">Cost Per Lead</span><span class="metric-val">$18–$45</span></div>
+          <div class="metric-row"><span class="metric-label">Lead-to-Appointment Rate</span><span class="metric-val">~62%</span></div>
+          <div class="metric-row"><span class="metric-label">Avg. Reach Per Month</span><span class="metric-val">25,000+</span></div>
+          <div class="metric-row"><span class="metric-label">Ad Launch Time</span><span class="metric-val">3–5 Days</span></div>
+          <div class="metric-row"><span class="metric-label">Reporting Frequency</span><span class="metric-val">Weekly</span></div>
+        </div>
+        <div class="text-side">
+          <div class="section-tag">Service 02</div>
+          <h2>📣 Meta Ad Campaigns for Dental Appointments</h2>
+          <p>Facebook and Instagram are where your potential patients spend hours every day. We put your practice in front of the exact people in your zip code who are most likely to need dental care — and we make them an offer they can't scroll past.</p>
+          <p>Our dental ad campaigns are built specifically for appointment generation, not just "brand awareness." Every dollar you spend is tracked, optimized, and reported to you in clear, plain-English weekly reports.</p>
+          <div class="feature-tags">
+            <span class="feature-tag">Hyper-Local Zip Targeting</span>
+            <span class="feature-tag">Custom Ad Creatives</span>
+            <span class="feature-tag">A/B Testing</span>
+            <span class="feature-tag">Retargeting</span>
+            <span class="feature-tag">Weekly Reports</span>
+            <span class="feature-tag">ROI Tracking</span>
+          </div>
+          <div style="margin-top:28px">
+            <a class="btn-primary" href="#" onclick="showPage('contact')">Launch My Ad Campaign</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Service 3: 5-Min Alert -->
+      <div class="service-detail">
+        <div class="text-side">
+          <div class="section-tag">Service 03 — Our Signature Feature</div>
+          <h2>⚡ 5-Minute Lead Alert System</h2>
+          <p>This is the feature that changes everything. Industry data shows that the odds of reaching a lead drop by over 80% after the first 5 minutes. Most practices follow up hours — or even days — later. By then, the patient has already booked somewhere else.</p>
+          <p>Our proprietary alert system watches your lead forms 24/7. The instant a new patient submits their info, an automated phone call goes to your front desk with a read-out of the lead's details. You call them back while they're still thinking about your ad. You win the booking every time.</p>
+          <div class="feature-tags">
+            <span class="feature-tag">Real-Time Detection</span>
+            <span class="feature-tag">Auto Phone Alert</span>
+            <span class="feature-tag">Lead Info Read-Out</span>
+            <span class="feature-tag">Under 5 Minutes</span>
+            <span class="feature-tag">24/7 Monitoring</span>
+            <span class="feature-tag">Zero Cold Leads</span>
+          </div>
+          <div style="margin-top:28px">
+            <a class="btn-primary" href="#" onclick="showPage('contact')">Activate My Lead Alerts</a>
+          </div>
+        </div>
+        <div class="service-visual-box" style="background:linear-gradient(135deg,#001f4d,#003a8c)">
+          <h4>The Lead Speed Advantage</h4>
+          <div class="metric-row"><span class="metric-label">Alert Speed</span><span class="metric-val">&lt; 5 min</span></div>
+          <div class="metric-row"><span class="metric-label">Industry Average Response</span><span class="metric-val">~3.5 hrs</span></div>
+          <div class="metric-row"><span class="metric-label">Conversion Rate (Fast Follow-Up)</span><span class="metric-val">62%</span></div>
+          <div class="metric-row"><span class="metric-label">Conversion Rate (Slow Follow-Up)</span><span class="metric-val">~9%</span></div>
+          <div class="metric-row"><span class="metric-label">Leads Notified Per Day</span><span class="metric-val">Unlimited</span></div>
+          <div class="metric-row"><span class="metric-label">Hours Monitored</span><span class="metric-val">24 / 7</span></div>
+        </div>
+      </div>
+
+      <!-- Service 4: Reputation -->
+      <div class="service-detail">
+        <div class="service-visual-box">
+          <h4>Reputation Impact</h4>
+          <div class="metric-row"><span class="metric-label">Patients Read Reviews Before Booking</span><span class="metric-val">92%</span></div>
+          <div class="metric-row"><span class="metric-label">Trust 5-Star Practices More</span><span class="metric-val">87%</span></div>
+          <div class="metric-row"><span class="metric-label">Avg. New Reviews / Month</span><span class="metric-val">15–30</span></div>
+          <div class="metric-row"><span class="metric-label">Review Platforms Managed</span><span class="metric-val">Google, Yelp, FB</span></div>
+        </div>
+        <div class="text-side">
+          <div class="section-tag">Service 04</div>
+          <h2>⭐ Reputation Management</h2>
+          <p>When a patient searches for a dentist near them, the practice with the most and best reviews wins — every time. We run an automated review system that consistently generates 5-star Google, Yelp, and Facebook reviews from your happy patients.</p>
+          <p>We also monitor your reputation so nothing negative slips through unaddressed, protecting the credibility you've worked hard to build.</p>
+          <div class="feature-tags">
+            <span class="feature-tag">Automated Review Requests</span>
+            <span class="feature-tag">Multi-Platform</span>
+            <span class="feature-tag">Negative Alert Monitoring</span>
+            <span class="feature-tag">Monthly Reports</span>
+          </div>
+          <div style="margin-top:28px">
+            <a class="btn-primary" href="#" onclick="showPage('contact')">Build My Reputation</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div><!-- end page-services -->
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE: PRICING                                          -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="page-pricing" class="page">
+  <section class="page-hero">
+    <div class="container">
+      <div class="section-tag" style="background:rgba(255,255,255,.15);color:rgba(255,255,255,.9)">Pricing Packages</div>
+      <h1>Choose Your Growth Package</h1>
+      <p>Every plan includes our signature 5-minute lead alert system. Choose the package that matches where your practice is right now and where you want to go.</p>
+    </div>
+  </section>
+
+  <section class="pricing-page">
+    <div class="container">
+      <div style="text-align:center;margin-bottom:16px">
+        <div class="section-tag">All plans include the 5-minute lead alert system ⚡</div>
+      </div>
+      <div class="pricing-grid">
+
+        <!-- Plan 1 -->
+        <div class="pricing-card">
+          <div class="pricing-head">
+            <div class="pricing-icon">🌱</div>
+            <h3>Practice Starter</h3>
+            <p>For brand new dental practices</p>
+          </div>
+          <div class="pricing-body">
+            <ul class="pricing-features">
+              <li><span class="check">✓</span> Custom dental website</li>
+              <li><span class="check">✓</span> Domain & hosting setup</li>
+              <li><span class="check">✓</span> Logo & branding basics</li>
+              <li><span class="check">✓</span> Google Business Profile setup</li>
+              <li><span class="check">✓</span> Basic SEO foundation</li>
+              <li><span class="check">✓</span> 5-Min lead alert system</li>
+              <li><span class="check">✓</span> 1 Meta ad campaign</li>
+            </ul>
+          </div>
+          <div class="pricing-footer">
+            <a class="btn-outline" href="#" onclick="showPage('contact')" style="display:block;text-align:center">Get Pricing Details</a>
+          </div>
+        </div>
+
+        <!-- Plan 2 -->
+        <div class="pricing-card">
+          <div class="pricing-head">
+            <div class="pricing-icon">⚙️</div>
+            <h3>Practice Essentials</h3>
+            <p>For established practices needing consistency</p>
+          </div>
+          <div class="pricing-body">
+            <ul class="pricing-features">
+              <li><span class="check">✓</span> Everything in Starter</li>
+              <li><span class="check">✓</span> Reputation management system</li>
+              <li><span class="check">✓</span> 2 Meta ad campaigns</li>
+              <li><span class="check">✓</span> Monthly performance report</li>
+              <li><span class="check">✓</span> Call tracking & analytics</li>
+              <li><span class="check">✓</span> Website maintenance</li>
+              <li><span class="check">✓</span> SMS lead follow-up</li>
+            </ul>
+          </div>
+          <div class="pricing-footer">
+            <a class="btn-outline" href="#" onclick="showPage('contact')" style="display:block;text-align:center">Get Pricing Details</a>
+          </div>
+        </div>
+
+        <!-- Plan 3 POPULAR -->
+        <div class="pricing-card popular">
+          <div class="pricing-head">
+            <div class="popular-badge">Most Popular</div>
+            <div class="pricing-icon">🚀</div>
+            <h3>Practice Builder</h3>
+            <p>For practices ready for serious growth</p>
+          </div>
+          <div class="pricing-body">
+            <ul class="pricing-features">
+              <li><span class="check">✓</span> Everything in Essentials</li>
+              <li><span class="check">✓</span> 4 Meta ad campaigns</li>
+              <li><span class="check">✓</span> Advanced targeting & retargeting</li>
+              <li><span class="check">✓</span> Bi-weekly strategy calls</li>
+              <li><span class="check">✓</span> Advanced SEO campaign</li>
+              <li><span class="check">✓</span> Video ad creatives</li>
+              <li><span class="check">✓</span> Competitor conquest ads</li>
+              <li><span class="check">✓</span> Priority support</li>
+            </ul>
+          </div>
+          <div class="pricing-footer">
+            <a class="btn-primary" href="#" onclick="showPage('contact')" style="display:block;text-align:center">Get Pricing Details</a>
+          </div>
+        </div>
+
+        <!-- Plan 4 -->
+        <div class="pricing-card">
+          <div class="pricing-head">
+            <div class="pricing-icon">👑</div>
+            <h3>Market Dominator</h3>
+            <p>For practices that want total market control</p>
+          </div>
+          <div class="pricing-body">
+            <ul class="pricing-features">
+              <li><span class="check">✓</span> Everything in Builder</li>
+              <li><span class="check">✓</span> Unlimited Meta campaigns</li>
+              <li><span class="check">✓</span> Multi-location support</li>
+              <li><span class="check">✓</span> Weekly strategy sessions</li>
+              <li><span class="check">✓</span> Google Ads (PPC) included</li>
+              <li><span class="check">✓</span> Full funnel automation</li>
+              <li><span class="check">✓</span> Dedicated account manager</li>
+              <li><span class="check">✓</span> Custom analytics dashboard</li>
+            </ul>
+          </div>
+          <div class="pricing-footer">
+            <a class="btn-outline" href="#" onclick="showPage('contact')" style="display:block;text-align:center">Get Pricing Details</a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CTA -->
+      <div style="text-align:center;margin-top:50px;padding:40px;background:var(--blue-50);border-radius:20px">
+        <h3 style="font-family:var(--font-head);font-weight:800;font-size:1.5rem;color:var(--blue-900);margin-bottom:10px">Not Sure Which Package is Right for You?</h3>
+        <p style="color:var(--gray-500);margin-bottom:24px">Book a free 20-minute call with our team. We'll analyze your practice and tell you exactly which plan will get you the best results.</p>
+        <a class="btn-primary" href="#" onclick="showPage('contact')">Book My Free Strategy Call</a>
+      </div>
+    </div>
+  </section>
+</div><!-- end page-pricing -->
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE: ABOUT US                                         -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="page-about" class="page">
+  <section class="page-hero">
+    <div class="container">
+      <div class="section-tag" style="background:rgba(255,255,255,.15);color:rgba(255,255,255,.9)">About Us</div>
+      <h1>We Built This for Dentists. Only Dentists.</h1>
+      <p>Aug8 Agency is an America-first dental automation agency dedicated entirely to helping dental practices grow faster, smarter, and more profitably than they ever thought possible.</p>
+    </div>
+  </section>
+
+  <section class="about-page">
+    <div class="container">
+      <div class="about-grid">
+        <div>
+          <div class="section-tag">Our Story</div>
+          <h2 class="section-title">Born From a Simple Frustration</h2>
+          <p>We watched too many talented dentists struggle with marketing agencies that didn't understand their world — agencies that applied cookie-cutter strategies meant for restaurants or retail stores to dental practices.</p>
+          <p>The dental industry is unique. Patients have anxieties. Insurance is complex. Location is everything. And speed of follow-up is the single most important factor in converting a lead into a booked patient.</p>
+          <p>So we built a system from the ground up, specifically for dental practices. We combined professional website design, targeted Meta advertising, and our proprietary 5-minute lead alert technology into one complete, done-for-you growth engine.</p>
+          <p>Today, Aug8 Agency works with dental practices across all 50 states, and our mission remains the same: help every dentist we work with become the most trusted, most booked practice in their area.</p>
+        </div>
+        <div>
+          <div class="section-tag">Our Mission</div>
+          <h2 class="section-title">Make Every Dental Practice Impossible to Ignore</h2>
+          <p>We exist to give independent dental practices the same marketing firepower that the big corporate chains have — and then some. We believe every great dentist deserves a full schedule, growing revenue, and a practice that runs on a predictable patient pipeline.</p>
+          <p>We don't work with every industry. We don't split our focus. Every strategy we've developed, every tool we've built, every optimization we run is designed specifically for one thing: getting more patients into dental chairs across America.</p>
+          <div style="margin-top:28px;padding:24px;background:var(--blue-50);border-radius:16px">
+            <div style="font-family:var(--font-head);font-weight:800;font-size:1rem;color:var(--blue-900);margin-bottom:8px">Our Core Promise</div>
+            <p style="font-size:.95rem;color:var(--gray-700);margin:0;line-height:1.7">"We will never let a lead go cold on our watch. Every patient who raises their hand for your practice will be reached within 5 minutes — or we'll fix it for free."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Values -->
+      <div class="section-header">
+        <div class="section-tag">Our Values</div>
+        <h2 class="section-title">What We Stand For</h2>
+      </div>
+      <div class="values-grid">
+        <div class="value-card">
+          <div class="value-icon">⚡</div>
+          <h4>Speed Wins</h4>
+          <p>In dental lead generation, the fastest practice wins. We're obsessed with speed at every step — from launching campaigns to alerting your team.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🎯</div>
+          <h4>Precision Targeting</h4>
+          <p>We don't cast wide nets. Every ad dollar is targeted at the most likely patients in your specific local market.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">📊</div>
+          <h4>Transparent Results</h4>
+          <p>You always know exactly what's working and why. No hidden metrics, no vague reports — just clear ROI data every week.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🦷</div>
+          <h4>Dental-Only Focus</h4>
+          <p>We work exclusively with dental practices. This focus means deeper expertise and better results than any generalist agency.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🤝</div>
+          <h4>True Partnership</h4>
+          <p>We're not a vendor — we're a growth partner. Your success is our success, and we're in it for the long term with you.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🇺🇸</div>
+          <h4>America-Wide Coverage</h4>
+          <p>From New York to California, we serve dental practices in all 50 states with local market knowledge and national-scale resources.</p>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div style="margin-top:70px">
+        <div class="cta-box">
+          <div>
+            <h2>Ready to Work With a Team That Gets It?</h2>
+            <p>Book a free call and let's talk about what your practice could look like in 90 days.</p>
+          </div>
+          <div class="cta-box-right">
+            <a class="btn-hero-white" href="#" onclick="showPage('contact')">Let's Talk →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page-about -->
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE: CONTACT                                          -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="page-contact" class="page">
+  <section class="page-hero">
+    <div class="container">
+      <div class="section-tag" style="background:rgba(255,255,255,.15);color:rgba(255,255,255,.9)">Contact Us</div>
+      <h1>Let's Build Your Patient Pipeline</h1>
+      <p>Fill out the form below and one of our dental marketing specialists will reach out within 24 hours to schedule your free strategy call.</p>
+    </div>
+  </section>
+
+  <section class="contact-page">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-info">
+          <h2>Get in Touch</h2>
+          <p>Whether you're a brand new practice or an established clinic looking to grow, we'd love to learn about your goals and show you exactly how Aug8 Agency can help.</p>
+
+          <div class="contact-item">
+            <div class="contact-icon">✉️</div>
+            <div>
+              <h5>Email Us</h5>
+              <p><a href="mailto:aug8agency@gmail.com" style="color:var(--blue-500);text-decoration:none">aug8agency@gmail.com</a></p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">🇺🇸</div>
+            <div>
+              <h5>Service Area</h5>
+              <p>All 50 United States — We work with dental practices nationwide</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">⏱️</div>
+            <div>
+              <h5>Response Time</h5>
+              <p>We reply within 24 hours on business days</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📅</div>
+            <div>
+              <h5>Free Strategy Call</h5>
+              <p>20-minute consultation — no sales pressure, just actionable advice for your practice</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-form">
+          <h3 style="font-family:var(--font-head);font-weight:800;font-size:1.4rem;color:var(--blue-900);margin-bottom:28px">Get Your Free Dental Marketing Strategy</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>First Name *</label>
+              <input type="text" placeholder="Dr. John" />
+            </div>
+            <div class="form-group">
+              <label>Last Name *</label>
+              <input type="text" placeholder="Smith" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Practice Name *</label>
+            <input type="text" placeholder="Smith Family Dental" />
+          </div>
+          <div class="form-group">
+            <label>Email Address *</label>
+            <input type="email" placeholder="dr.smith@mypractice.com" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>City / State *</label>
+              <input type="text" placeholder="Austin, TX" />
+            </div>
+            <div class="form-group">
+              <label>Practice Type *</label>
+              <select>
+                <option value="">Select...</option>
+                <option>General Dentistry</option>
+                <option>Cosmetic Dentistry</option>
+                <option>Orthodontics</option>
+                <option>Pediatric Dentistry</option>
+                <option>Oral Surgery</option>
+                <option>Periodontics</option>
+                <option>Endodontics</option>
+                <option>Multi-Specialty</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Current Situation</label>
+            <select>
+              <option value="">Select your stage...</option>
+              <option>New / Startup Practice</option>
+              <option>Struggling to get new patients</option>
+              <option>Growing and want to scale</option>
+              <option>Looking to add a second location</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Anything else you'd like us to know?</label>
+            <textarea placeholder="Tell us about your practice, your goals, or any specific challenges you're facing..."></textarea>
+          </div>
+          <button class="btn-primary" style="width:100%;justify-content:center;font-size:1rem;padding:16px" onclick="handleSubmit()">
+            Send My Free Strategy Request →
+          </button>
+          <p style="font-size:.78rem;color:var(--gray-500);margin-top:12px;text-align:center">No spam. No sales pressure. Just expert advice for your practice.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page-contact -->
+
+
+<!-- ═══ FOOTER ═════════════════════════════════════════════ -->
+<footer id="main-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="nav-logo" href="#" onclick="showPage('home')">Aug<span>8</span> Agency</a>
+        <p>America's most complete dental growth system. Website design, Meta ad campaigns, and the only 5-minute lead alert system in the industry.</p>
+        <div class="footer-social">
+          <a class="social-btn" href="#">f</a>
+          <a class="social-btn" href="#">in</a>
+          <a class="social-btn" href="#">📸</a>
+          <a class="social-btn" href="#">X</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Who We Help</h4>
+        <ul>
+          <li><a href="#" onclick="showPage('who');switchTab('startup')">Startup Practices</a></li>
+          <li><a href="#" onclick="showPage('who');switchTab('struggling')">Struggling Practices</a></li>
+          <li><a href="#" onclick="showPage('who');switchTab('growing')">Growing Practices</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#" onclick="showPage('services')">Dental Websites</a></li>
+          <li><a href="#" onclick="showPage('services')">Meta Ad Campaigns</a></li>
+          <li><a href="#" onclick="showPage('services')">5-Min Lead Alerts</a></li>
+          <li><a href="#" onclick="showPage('services')">Reputation Management</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#" onclick="showPage('about')">About Us</a></li>
+          <li><a href="#" onclick="showPage('pricing')">Pricing</a></li>
+          <li><a href="#" onclick="showPage('contact')">Contact</a></li>
+          <li><a href="mailto:aug8agency@gmail.com">aug8agency@gmail.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Aug8 Agency. All rights reserved. Serving dental practices across all 50 United States.</p>
+      <p>Privacy Policy · Terms of Service</p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══ LIVE CHAT ══════════════════════════════════════════ -->
+<div class="chat-bubble">
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+      <div class="chat-header-info">
+        <div class="chat-avatar">💬</div>
+        <div class="chat-header-text">
+          <h4>Aug8 Agency</h4>
+          <p>Dental Growth Specialists</p>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="chat-online"><div class="chat-dot"></div><span class="online-text">Online</span></div>
+        <button class="chat-close" onclick="toggleChat()">✕</button>
+      </div>
+    </div>
+    <div class="chat-body" id="chatBody">
+      <div class="chat-msg bot">
+        <div class="bubble">👋 Hey there! I'm your Aug8 Agency assistant. Want to learn how we can fill your dental chairs with new patients?</div>
+        <div class="chat-time">Just now</div>
+      </div>
+      <div class="chat-msg bot">
+        <div class="bubble">We specialize in dental marketing for practices across all 50 states — including our signature <strong>5-minute lead alert system</strong>. How can I help you today?</div>
+        <div class="chat-time">Just now</div>
+      </div>
+    </div>
+    <div class="chat-foot">
+      <input class="chat-input" id="chatInput" type="text" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendMsg()" />
+      <button class="chat-send" onclick="sendMsg()">➤</button>
+    </div>
+  </div>
+  <button class="chat-toggle" onclick="toggleChat()" id="chatToggle">
+    💬
+    <div class="chat-notify" id="chatNotify">1</div>
+  </button>
+</div>
+
+<!-- Scroll Top -->
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+
+<!-- ═══ JS ══════════════════════════════════════════════════ -->
+<script>
+  // ── Page Navigation ──────────────────────────────────────
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const target = document.getElementById('page-' + name);
+    if (target) {
+      target.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    // Update active nav
+    document.querySelectorAll('.nav-links a[data-page]').forEach(a => {
+      a.classList.toggle('active-nav', a.dataset.page === name);
+    });
+  }
+
+  // ── Who We Help Tabs ─────────────────────────────────────
+  function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach((b, i) => {
+      const tabs = ['startup', 'struggling', 'growing'];
+      b.classList.toggle('active', tabs[i] === name);
+    });
+    document.querySelectorAll('.who-section').forEach(s => s.classList.remove('active'));
+    const t = document.getElementById('tab-' + name);
+    if (t) t.classList.add('active');
+  }
+
+  // ── Mobile Menu ───────────────────────────────────────────
+  function toggleMobile() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+
+  // ── Chat ──────────────────────────────────────────────────
+  let chatOpen = false;
+  function toggleChat() {
+    chatOpen = !chatOpen;
+    const win = document.getElementById('chatWindow');
+    win.classList.toggle('open', chatOpen);
+    document.getElementById('chatToggle').innerHTML = chatOpen ? '✕' : '💬<div class="chat-notify" id="chatNotify" style="display:none">1</div>';
+    document.getElementById('chatNotify') && (document.getElementById('chatNotify').style.display = 'none');
+  }
+
+  const botReplies = [
+    "Great question! Our team works with dental practices in all 50 states. Every plan includes our 5-minute lead alert system.",
+    "We'd love to learn more about your practice! The best next step is booking a free 20-minute strategy call with our team.",
+    "Our most popular plan is the Practice Builder — it includes Meta ad campaigns, advanced targeting, and full lead alert activation.",
+    "Absolutely! We've helped dozens of practices double their new patient bookings within 60–90 days of launching with us.",
+    "You can reach us anytime at aug8agency@gmail.com or fill out the contact form on our site. We respond within 24 hours!"
+  ];
+  let replyIdx = 0;
+
+  function sendMsg() {
+    const input = document.getElementById('chatInput');
+    const msg = input.value.trim();
+    if (!msg) return;
+    const body = document.getElementById('chatBody');
+
+    // User message
+    body.innerHTML += `<div class="chat-msg user"><div class="bubble">${msg}</div><div class="chat-time">Just now</div></div>`;
+    input.value = '';
+    body.scrollTop = body.scrollHeight;
+
+    // Bot reply
+    setTimeout(() => {
+      body.innerHTML += `<div class="chat-msg bot"><div class="bubble">${botReplies[replyIdx % botReplies.length]}</div><div class="chat-time">Just now</div></div>`;
+      replyIdx++;
+      body.scrollTop = body.scrollHeight;
+    }, 900);
+  }
+
+  // ── Form Submit ───────────────────────────────────────────
+  function handleSubmit() {
+    alert('Thank you! Your strategy request has been received. A member of the Aug8 Agency team will reach out within 24 hours.\n\nEmail: aug8agency@gmail.com');
+  }
+
+  // ── Scroll Top Button ─────────────────────────────────────
+  window.addEventListener('scroll', () => {
+    document.getElementById('scrollTop').classList.toggle('visible', window.scrollY > 400);
+  });
+</script>
+</body>
+</html>
