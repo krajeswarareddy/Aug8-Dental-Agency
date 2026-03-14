@@ -282,7 +282,7 @@ All rights reserved © 2025 Aug8 Agency.
 
 <div align="center">
 
-Built with ❤️ for dental practices across America
+Built with ❤️ for dental practices across United States of America
 
 **Aug8 Agency** · *Fill Your Chairs. Grow Your Practice. We Handle Everything.*
 
