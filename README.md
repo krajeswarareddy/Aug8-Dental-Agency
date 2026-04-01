@@ -17,7 +17,6 @@
 </div>
 
 ---
-**remove this on 25th april 2026**
 ## 📋 Table of Contents
 
 - [About The Project](#-about-the-project)
