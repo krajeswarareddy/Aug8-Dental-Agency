@@ -225,7 +225,164 @@
       position: absolute; right: -40px; top: 50%; transform: translateY(-50%);
       width: 500px; opacity: .12; pointer-events: none;
     }
+/* Government Trust */
 
+.gov-trust{
+    background:#ffffff;
+    padding:35px 0;
+}
+
+.gov-card{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    gap:40px;
+
+    background:#ffffff;
+
+    border:1px solid #e6edf5;
+
+    border-radius:18px;
+
+    padding:28px 35px;
+
+    box-shadow:0 10px 35px rgba(0,0,0,.05);
+
+}
+
+.gov-left{
+
+    display:flex;
+
+    gap:22px;
+
+    align-items:flex-start;
+
+}
+
+.gov-icon{
+
+    width:72px;
+
+    height:72px;
+
+    border-radius:18px;
+
+    background:#eef6ff;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:34px;
+
+    flex-shrink:0;
+
+}
+
+.gov-tag{
+
+    display:inline-block;
+
+    background:#eef6ff;
+
+    color:#1455b4;
+
+    padding:6px 16px;
+
+    border-radius:50px;
+
+    font-family:var(--font-head);
+
+    font-size:12px;
+
+    font-weight:700;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    margin-bottom:14px;
+
+}
+
+.gov-card h3{
+
+    font-family:var(--font-head);
+
+    font-size:30px;
+
+    margin-bottom:12px;
+
+    color:var(--blue-900);
+
+}
+
+.gov-card p{
+
+    font-size:17px;
+
+    color:#6b7280;
+
+    line-height:1.8;
+
+    max-width:760px;
+
+}
+
+.gov-right{
+
+    text-align:right;
+
+    min-width:280px;
+
+}
+
+.gov-number-title{
+
+    color:#64748b;
+
+    font-weight:600;
+
+    margin-bottom:8px;
+
+}
+
+.gov-number{
+
+    font-family:var(--font-head);
+
+    color:#1455b4;
+
+    font-size:22px;
+
+    font-weight:800;
+
+}
+
+@media(max-width:900px){
+
+.gov-card{
+
+flex-direction:column;
+
+align-items:flex-start;
+
+}
+
+.gov-right{
+
+text-align:left;
+
+min-width:auto;
+
+}
+
+}
     /* ─── ALERT BANNER ──────────────────────────── */
     .alert-banner {
       background: linear-gradient(135deg, var(--blue-900), var(--blue-700));
@@ -698,7 +855,56 @@
       </div>
     </div>
   </section>
+<!-- Government Trust -->
+<section class="gov-trust">
+    <div class="container">
 
+        <div class="gov-card">
+
+            <div class="gov-left">
+
+                <div class="gov-icon">
+                    🏛
+                </div>
+
+                <div>
+
+                    <span class="gov-tag">
+                        Government of India Registered MSME
+                    </span>
+
+                    <h3>
+                        Officially Recognized Business
+                    </h3>
+
+                    <p>
+                        Aug8 Agency is a registered Micro, Small & Medium Enterprise (MSME)
+                        under the Government of India's Udyam Registration Program,
+                        demonstrating our commitment to operating as a legitimate,
+                        compliant and professionally managed business while serving
+                        dental practices across the United States.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="gov-right">
+
+                <div class="gov-number-title">
+                    UDYAM Registration
+                </div>
+
+                <div class="gov-number">
+                    UDYAM-AP-07-0124105
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
   <!-- 5-Min Alert Banner -->
   <section class="alert-banner">
     <div class="container">
